@@ -53,6 +53,7 @@ const PriceTable = () => {
         <th>Price</th>
         <th>Direction</th>
         <th>Change</th>
+        <th>Day of Week</th>
       </thead>
       <tbody>
         {prices.reduce(assembleRows, {rows: [], prevPrice: null}).rows}
