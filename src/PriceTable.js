@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 
+import TableRow from "./TableRow.js";
+
 const PriceTable = () => {
   const [prices, setPrices] = useState([]);
 
@@ -14,10 +16,10 @@ const PriceTable = () => {
           data: { history },
         } = await data.json();
 
-        const onlyZeroHours = history.filter(price => {
-          const time = new Date(price.timestamp)
+        const onlyZeroHours = history.filter((price) => {
+          const time = new Date(price.timestamp);
           return time.getHours() === 0;
-        })
+        });
 
         setPrices(onlyZeroHours);
       } catch (e) {
@@ -28,22 +30,26 @@ const PriceTable = () => {
     fetchData();
   }, []);
 
+  const assembleRows = (acc, item) => {
+    const { timestamp, price } = item;
+    const { rows, prevPrice } = acc;
+
+    const change = !prevPrice ? "n/a" : price - prevPrice;
+    const parsedTime = new Date(timestamp);
+    rows.push(<TableRow time={parsedTime} price={price} change={change}/>);
+
+    return { rows, prevPrice: price };
+  }
+
   return (
     <Table striped bordered variant="dark">
       <thead>
         <th>Date</th>
         <th>Price</th>
+        <th>Change</th>
       </thead>
       <tbody>
-        {prices.map(item => {
-          const time = new Date(item.timestamp);
-          return (
-            <tr>
-              <td>{time.toDateString()}</td>
-              <td>{item.price}</td>
-            </tr>
-          )
-        })}
+        {prices.reduce(assembleRows, {rows: [], prevPrice: null}).rows}
       </tbody>
     </Table>
   );
