@@ -33,10 +33,15 @@ const PriceTable = () => {
   const assembleRows = (acc, item) => {
     const { timestamp, price } = item;
     const { rows, prevPrice } = acc;
-
-    const change = !prevPrice ? "n/a" : price - prevPrice;
     const parsedTime = new Date(timestamp);
-    rows.push(<TableRow time={parsedTime} price={price} change={change}/>);
+
+    if (!prevPrice) {
+      rows.push(<TableRow time={parsedTime} price={price} change={"n/a"} direction={"n/a"} />);
+    } else {
+      const change = price - prevPrice;
+      const direction = Number(change) > 0 ? "Up" : "Down";
+      rows.push(<TableRow time={parsedTime} price={price} change={change} direction={direction} />);
+    }
 
     return { rows, prevPrice: price };
   }
@@ -46,6 +51,7 @@ const PriceTable = () => {
       <thead>
         <th>Date</th>
         <th>Price</th>
+        <th>Direction</th>
         <th>Change</th>
       </thead>
       <tbody>
