@@ -36,15 +36,30 @@ const PriceTable = () => {
     const parsedTime = new Date(timestamp);
 
     if (!prevPrice) {
-      rows.push(<TableRow time={parsedTime} price={price} change={"n/a"} direction={"n/a"} />);
+      rows.push(
+        <TableRow
+          time={parsedTime}
+          price={price}
+          change={"n/a"}
+          direction={"n/a"}
+        />
+      );
     } else {
       const change = price - prevPrice;
-      const direction = Number(change) > 0 ? "Up" : "Down";
-      rows.push(<TableRow time={parsedTime} price={price} change={change} direction={direction} />);
+      let direction = Number(change) > 0 ? "Up" : "Down";
+      if (change === 0) direction = "Same";
+      rows.push(
+        <TableRow
+          time={parsedTime}
+          price={price}
+          change={change}
+          direction={direction}
+        />
+      );
     }
 
     return { rows, prevPrice: price };
-  }
+  };
 
   return (
     <Table striped bordered variant="dark">
@@ -56,7 +71,7 @@ const PriceTable = () => {
         <th>Day of Week</th>
       </thead>
       <tbody>
-        {prices.reduce(assembleRows, {rows: [], prevPrice: null}).rows}
+        {prices.reduce(assembleRows, { rows: [], prevPrice: null }).rows}
       </tbody>
     </Table>
   );
