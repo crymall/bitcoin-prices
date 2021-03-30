@@ -40,8 +40,9 @@ const PriceTable = () => {
         <TableRow
           time={parsedTime}
           price={price}
-          change={"n/a"}
-          direction={"n/a"}
+          prevPrice={"na"}
+          change={"na"}
+          direction={"na"}
         />
       );
     } else {
@@ -52,6 +53,7 @@ const PriceTable = () => {
         <TableRow
           time={parsedTime}
           price={price}
+          prevPrice={prevPrice}
           change={change}
           direction={direction}
         />
